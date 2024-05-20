@@ -6,6 +6,12 @@
  *  data - вхідні дані.
  */
 function checkData(data) {
+  if (typeof data === 'object' && Object.keys(data).length !== 0) {
+    return data
+  } else {
+    const err = new Error("Об'єкт пустий");
+    return err.message
+  }
   // Якщо об'єкт не пустий повертаємо дані
   // Інакше створюємо помилку,в якості тексту помилки ми використовуємо рядок "Об'єкт пустий".
   // Якщо виникла помилка, повертаємо її повідомлення.
@@ -26,6 +32,11 @@ console.log(checkData({ name: "John", age: 30, city: "New York" }));
  *  jsonStr - JSON-рядок для аналізу.
  */
 function parseJson(jsonStr) {
+  try {
+    return JSON.parse(jsonStr)
+  } catch(err) {
+    return err.message
+  }
   // Спроба розпарсити JSON-рядок.
   // Якщо рядок має невірний формат, виникне помилка, яку ми обробляємо у блоку catch.
   // Повертаємо отриманий об'єкт
@@ -53,6 +64,13 @@ console.log(parseJson(invalidJson));
  *  age - вік користувача.
  */
 function getAge(age) {
+  if (age > 0) {
+    return `Вік користувача: ${age}`
+  } else {
+    const err = new Error("Вік не може бути менше 0!");
+    err.name = "AgeError";
+    return {error: err.message, name: err.name}
+  }
   // Спроба отримати вік користувача.
   // Якщо вік менше 0, виникне помилка, яку ми обробляємо у блоку catch.
   // Генеруємо помилку, якщо вік менше 0 з повідомленням Вік не може бути менше 0!.
@@ -79,6 +97,13 @@ console.log(getAge(20));
  *  id - ID книги.
  */
 function getBookById(books, id) {
+  const book = books.filter(el => el.id === id)
+  if (book.length !== 0) {
+    return `Книга: ${book[0].title}`
+  } else {
+    const err = new TypeError(`Книга з ID ${id} не знайдена!`)
+    return err.toString()
+  }
   // Спроба знайти книгу по ID та записати в змінну book.
   // Якщо книга не знайдена, генерується TypeError з повідомленням Книга з ID ${id} не знайдена!.
   // Повертаємо book
@@ -119,6 +144,13 @@ console.log(
  *  encodedString - Рядок для декодування.
  */
 function decodeURIComponentWrapper(encodedString) {
+  try {
+    return decodeURIComponent(encodedString);
+  } catch (err) {
+    if (err.name === 'URIError') {
+      return `${err.name}: Помилка декодування URI`
+    }
+  }
   // Спроба декодувати рядок
   // Повертаємо декодований рядок
   // Якщо виникла помилка, і ії назва дорівнює URIError повертаємо помилку про неправильний URI формат з повідомленням Помилка декодування URI,
